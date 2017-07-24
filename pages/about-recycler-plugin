@@ -1,0 +1,37 @@
+{
+  "title": "About Recycler Plugin",
+  "story": [
+  {
+    "type": "paragraph",
+    "id": "58c22824db3856e3",
+    "text": "Here we describe the purpose of the plugin and include a sample."
+  },
+  {
+    "type": "recycler",
+    "id": "e164e45e61637e1c",
+    "text": "This is text in the new plugin. You can *double-click* to edit it too."
+  }
+],
+  "journal": [
+  {
+    "type": "create",
+    "item": {
+      "title": "About Recycler Plugin",
+      "story": [
+  {
+    "type": "paragraph",
+    "id": "58c22824db3856e3",
+    "text": "Here we describe the purpose of the plugin and include a sample."
+  },
+  {
+    "type": "recycler",
+    "id": "e164e45e61637e1c",
+    "text": "This is text in the new plugin. You can *double-click* to edit it too."
+  }
+]
+    },
+    "date": 1500895761000,
+    "certificate": "from mkplugin.sh"
+  }
+]
+}
