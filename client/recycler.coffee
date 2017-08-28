@@ -3,7 +3,8 @@
  Licensed under the MIT license.
 ###
 
-_ = require 'lodash'
+queue = require 'async/queue'
+
 
 escape = (line) ->
   line
@@ -53,35 +54,50 @@ emit = ($item, item) ->
 
 
 bind = ($item, item) ->
-  $item.on 'click', '.delete', ->
-    slug = '/recycler/' + $(this).siblings('a.internal').data('pageName') + '.json'
-    console.log 'slug: ', slug
+  q = queue( (task, cb) ->
     myInit = {
       method: 'DELETE'
       cache: 'no-cache'
       mode: 'same-origin'
       credentials: 'include'
     }
-    fetch slug, myInit
+    fetch task.slug, myInit
     .then (response) ->
       if response.ok
-        emit( $item.empty(), item)
+        recyclerList = $(task.item).parent().parent()
+        $(task.item).parent().remove()
+
+        if $(recyclerList).children().length is 0
+          # no pages left in recycler so show message for empty recycler
+          $item.empty()
+          $item.append """
+            <p style="background-color:#eee;padding:15px;">
+              The recycler is empty
+            </p>
+          """
+    .then cb()
+  , 2) # just 2 processes working on the queue
+
+  $item.on 'click', '.delete', ->
+    slug = '/recycler/' + $(this).siblings('a.internal').data('pageName') + '.json'
+    console.log 'slug: ', slug
+    q.push {slug: slug
+    item: this}, (err) ->
+      if err
+        console.log "recycler error: ", err
 
   $item.on 'click', '.empty', ->
-    recycleElements = $(this).closest('div', 'recycler').find('a.internal')
-    for recycleElement in recycleElements
-      slug = '/recycler/' + $(recycleElement).data('pageName') + '.json'
+    recycleElements = $(this).parent().parent().children().first()
+    $(recycleElements).children().each( () ->
+      slug = '/recycler/' + $(this).children('a.internal').data('pageName') + '.json'
       console.log 'slug: ', slug
-      myInit = {
-        method: 'DELETE'
-        cache: 'no-cache'
-        mode: 'same-origin'
-        credentials: 'include'
-      }
-      fetch slug, myInit
-      .then (response) ->
-        if response.ok
-          emit( $item.empty(), item)
+      delButton = $(this).children('delete')
+      q.push {slug: slug
+      item: delButton}, (err) ->
+        if err
+          console.log 'recycler error: ', err
+    )
+
 
 
 
