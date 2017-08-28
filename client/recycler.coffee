@@ -80,7 +80,6 @@ bind = ($item, item) ->
 
   $item.on 'click', '.delete', ->
     slug = '/recycler/' + $(this).siblings('a.internal').data('pageName') + '.json'
-    console.log 'slug: ', slug
     q.push {slug: slug
     item: this}, (err) ->
       if err
@@ -90,7 +89,6 @@ bind = ($item, item) ->
     recycleElements = $(this).parent().parent().children().first()
     $(recycleElements).children().each( () ->
       slug = '/recycler/' + $(this).children('a.internal').data('pageName') + '.json'
-      console.log 'slug: ', slug
       delButton = $(this).children('delete')
       q.push {slug: slug
       item: delButton}, (err) ->
