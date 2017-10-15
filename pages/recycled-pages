@@ -4,7 +4,7 @@
     {
       "type": "paragraph",
       "id": "e15708d0df07732d",
-      "text": "Here we list pages in the site's recycler. Use the (X) to discard these copies."
+      "text": "Here we list pages in the site's recycler. Use the (X) to discard these copies. See also [[Local Changes]]"
     },
     {
       "type": "recycler",
@@ -35,7 +35,7 @@
       "item": {
         "type": "paragraph",
         "id": "e15708d0df07732d",
-        "text": "Here we list pages in the site's recycler. Use the (X) to discard these copies."
+        "text": "Here we list pages in the site's recycler. Use the (X) to discard these copies. See also [[Local Changes]]"
       },
       "date": 1504520531076
     },
