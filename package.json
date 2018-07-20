@@ -1,5 +1,5 @@
 {
-  "name": "wiki-plugin-recycler",
+  "name": "@paul90/wiki-plugin-recycler",
   "version": "0.1.1",
   "description": "Federated Wiki - Recycler Plugin",
   "keywords": [
@@ -19,8 +19,8 @@
   },
   "devDependencies": {
     "async": "^2.5.0",
-    "coffee-script": "^1.12.7",
-    "coffeeify": "^2.1.0",
+    "coffeeify": "^3.0.1",
+    "coffeescript": "^2.3.1",
     "expect.js": "^0.3.1",
     "grunt": "^1.0.1",
     "grunt-browserify": "^5.0.0",
@@ -28,17 +28,17 @@
     "grunt-contrib-watch": "^1.0.0",
     "grunt-git-authors": "^3.2.0",
     "grunt-mocha-test": "^0.13.2",
-    "mocha": "^3.4.2"
+    "mocha": "^5.2.0"
   },
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/fedwiki/wiki-plugin-recycler.git"
+    "url": "https://github.com/fedwiki/wiki-plugin-recycler-dat.git"
   },
   "bugs": {
-    "url": "https://github.com/fedwiki/wiki-plugin-recycler/issues"
+    "url": "https://github.com/fedwiki/wiki-plugin-recycler-dat/issues"
   },
   "engines": {
-    "node": ">=6.x"
+    "node": ">=8.11"
   }
 }
