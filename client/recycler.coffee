@@ -23,15 +23,36 @@ listItemHtml = (slug, title) ->
   """
 
 emit = ($item, item) ->
-  recycledPages = []
-  wiki.recycler.get 'system/slugs.json', (error, data) ->
-    if error
-      $item.append """
-        <p style="background-color:#eee;padding:15px;">
-          Unable to fetch contents of recycler
-        </p>
-      """
-    else if data.length is 0
+
+
+  extractPageInfo = (page) ->
+    rawPageData = await wiki.archive.readFile("/recycler/" + page.name)
+    pageJSON = JSON.parse(rawPageData)
+    return
+      slug: page.name.split('.')[0]
+      title: pageJSON.title
+
+  try
+    pages = await wiki.archive.readdir('/recycler', {stat: true})
+  catch error
+    console.log "recycler emit", error
+    $item.append """
+      <p style="background-color:#eee;padding:15px;">
+        Unable to fetch contents of recycler
+      </p>
+    """
+    return
+
+  pages = pages.filter (page) -> page.stat.isFile() and page.name.endsWith('.json')
+
+  pages = pages.map (page) ->
+    pageEntry = await extractPageInfo(page)
+    .then (pageEntry) ->
+      return pageEntry
+
+  Promise.all(pages)
+  .then (pages) ->
+    if pages.length is 0
       $item.append """
         <p style="background-color:#eee;padding:15px;">
           The recycler is empty
@@ -39,43 +60,39 @@ emit = ($item, item) ->
       """
     else
       $item.append( ul = $('<ul>') )
-      for i in [0...data.length]
-        slug = data[i].slug
-        if data[i].title?
-          title = data[i].title
+      for i in [0...pages.length]
+        slug = pages[i].slug
+        if pages[i].title?
+          title = pages[i].title
         else
-          title = data[i].slug
+          title = pages[i].slug
         ul.append listItemHtml(slug, title)
-      if data.length > 0
+      if pages.length > 0
         $item.append """
-          <ul><button class="empty">Empty Recyler</button></ul>
+          <ul><button class="empty">Empty Recycler</button></ul>
         """
 
 
 
 bind = ($item, item) ->
   q = queue( (task, cb) ->
-    myInit = {
-      method: 'DELETE'
-      cache: 'no-cache'
-      mode: 'same-origin'
-      credentials: 'include'
-    }
-    fetch task.slug, myInit
-    .then (response) ->
-      if response.ok
-        recyclerList = $(task.item).parent().parent()
-        $(task.item).parent().remove()
+    await wiki.archive.unlink(task.slug)
+    .then () ->
+      recyclerList = $(task.item).parent().parent()
+      $(task.item).parent().remove()
 
-        if $(recyclerList).children().length is 0
-          # no pages left in recycler so show message for empty recycler
-          $item.empty()
-          $item.append """
-            <p style="background-color:#eee;padding:15px;">
-              The recycler is empty
-            </p>
-          """
-    .then cb()
+      if $(recyclerList).children().length is 0
+        # no pages left in recycler so show message for empty recycler
+        $item.empty()
+        $item.append """
+          <p style="background-color:#eee;padding:15px;">
+            The recycler is empty
+          </p>
+        """
+        cb()
+    .catch (error) ->
+      console.log "recycler error: ", error
+      cb()
   , 2) # just 2 processes working on the queue
 
   $item.on 'click', '.delete', ->
