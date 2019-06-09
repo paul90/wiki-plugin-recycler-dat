@@ -15,7 +15,7 @@ module.exports = function (grunt) {
         src: ['client/recycler.coffee'],
         dest: 'client/recycler.js',
         options: {
-          transform: [['coffeeify', {transpile: []}]],
+          transform: [[ 'coffeeify', { transpile: { presets: ['@babel/preset-env'] } } ]],
           browserifyOptions: {
             extentions: ".coffee"
           }
