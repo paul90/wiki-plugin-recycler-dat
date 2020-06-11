@@ -33,7 +33,7 @@ emit = ($item, item) ->
       title: pageJSON.title
 
   try
-    pages = await wiki.archive.readdir('/recycler', {stat: true})
+    pages = await wiki.archive.readdir('/recycler', {includeStats: true})
   catch error
     console.log "recycler emit", error
     $item.append """
